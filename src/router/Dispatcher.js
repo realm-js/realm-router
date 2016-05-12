@@ -72,8 +72,10 @@ class Dispatcher {
     */
    include(parent, props) {
       var self = this;
-      var attrs = props.attrs;
-      self.services.$attrs = attrs || {};
+
+      self.services.$attrs = self.services.$attrs || {};
+      self.services.$attrs[parent.name] = props.attrs || {};
+
       return this.decorate(parent).then(function() {
          return self.promised().then(() => {
             if (parent.inject) {

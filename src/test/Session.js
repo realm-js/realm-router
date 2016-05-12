@@ -10,9 +10,9 @@ import Permissions as permissions from realm.test;
  */
 class Session {
 
-   static inject($req, $permissions) {
+   static inject($req, $permissions, $attrs) {
       return {
-         $session: "this is session"
+         $session: $attrs
       }
    }
 }

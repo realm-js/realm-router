@@ -203,8 +203,10 @@ realm.module("realm.router.Dispatcher", ["realm.router.Collection", "realm.route
          key: "include",
          value: function include(parent, props) {
             var self = this;
-            var attrs = props.attrs;
-            self.services.$attrs = attrs || {};
+
+            self.services.$attrs = self.services.$attrs || {};
+            self.services.$attrs[parent.name] = props.attrs || {};
+
             return this.decorate(parent).then(function () {
                return self.promised().then(function () {
                   if (parent.inject) {
@@ -561,7 +563,7 @@ realm.module("realm.test.MainRouter", ["realm.router.decorators.route", "realm.r
 
    var $_exports;
 
-   var MainRouter = (_dec = route("/:id?/:sub?"), _dec2 = cors(), _dec3 = sess(), _dec(_class = _dec2(_class = (_class2 = function () {
+   var MainRouter = (_dec = route("/:id?/:sub?"), _dec2 = cors(), _dec3 = sess("hello world"), _dec(_class = _dec2(_class = (_class2 = function () {
       function MainRouter() {
          _classCallCheck(this, MainRouter);
       }
@@ -569,11 +571,7 @@ realm.module("realm.test.MainRouter", ["realm.router.decorators.route", "realm.r
       _createClass(MainRouter, null, [{
          key: "get",
          value: function get($session, $params, $query, $body) {
-            return {
-               params: $params,
-               hello: "world",
-               q: $query
-            };
+            return $session;
          }
       }]);
 
@@ -593,7 +591,7 @@ realm.module("realm.test.Permissions", ["realm.router.Decorator"], function (Dec
 
       _createClass(Permissions, null, [{
          key: "inject",
-         value: function inject($req) {
+         value: function inject($req, $attrs) {
             return {
                $permissions: "this is permissions"
             };
@@ -622,9 +620,9 @@ realm.module("realm.test.Session", ["realm.router.Decorator", "realm.test.Permis
 
       _createClass(Session, null, [{
          key: "inject",
-         value: function inject($req, $permissions) {
+         value: function inject($req, $permissions, $attrs) {
             return {
-               $session: "this is session"
+               $session: $attrs
             };
          }
       }]);

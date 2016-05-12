@@ -3,7 +3,7 @@
 import Decorator from realm.router;
 
 class Permissions {
-   static inject($req) {
+   static inject($req, $attrs) {
       return {
          $permissions: "this is permissions"
       }

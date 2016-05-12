@@ -8,13 +8,8 @@ import Session as sess from realm.test;
 @cors()
 
 class MainRouter {
-
-   @sess()
+   @sess("hello world")
    static get($session, $params, $query, $body) {
-      return {
-         params: $params,
-         hello: "world",
-         q: $query
-      }
+      return $session;
    }
 }
