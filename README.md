@@ -1,6 +1,7 @@
 # realm-router
 
-Realm router is a bleeding edge restful framework, based on realm dependency injection.
+Realm router is a bleeding edge restful framework (ec7 + decorators), based on realm dependency injection.
+
 
 
 ## Features
