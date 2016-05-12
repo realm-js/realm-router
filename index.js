@@ -494,6 +494,45 @@ realm.module("realm.router.Traceback", ["realm.router.utils.lodash", "realm.rout
 
    return $_exports;
 });
+realm.module("realm.router.assert", [], function () {
+   var $_exports;
+
+   var _throw = function _throw(code, msg) {
+      throw {
+         status: code,
+         message: msg
+      };
+   };
+
+   var Assert = function () {
+      function Assert() {
+         _classCallCheck(this, Assert);
+      }
+
+      _createClass(Assert, null, [{
+         key: "bad_request",
+         value: function bad_request(message) {
+            return _throw(400, message || "Bad request");
+         }
+      }, {
+         key: "unauthorized",
+         value: function unauthorized(message) {
+            return _throw(401, message || "Unauthorized");
+         }
+      }, {
+         key: "not_found",
+         value: function not_found(message) {
+            return _throw(404, message || "Not found");
+         }
+      }]);
+
+      return Assert;
+   }();
+
+   $_exports = Assert;
+
+   return $_exports;
+});
 realm.module("realm.router.utils.path2exp", function () {
    return require('path-to-regexp');
 });
