@@ -213,12 +213,16 @@ class Dispatcher {
    static initRoutes(_package, opts) {
       opts = opts || {};
       PRETTY_TRACE = opts.prettyTrace;
-      return realm.requirePackage(_package).then(function(_packages) {
-         logger.info("Package '%s' has been successfully required", _package);
-         logger.info("Injested %s routes", _.keys(_packages).length);
-      }).catch(function(e) {
-         console.log(e.stack)
+      var packages = [].concat(_package);
+      return realm.each(packages, function(pkg) {
+         return realm.requirePackage(pkg).then(function(_packages) {
+            logger.info("Package '%s' has been successfully required", pkg);
+            logger.info("Injested %s routes", _.keys(_packages).length); //
+         }).catch(function(e) {
+            console.log(e.stack)
+         });
       })
+
    }
 }
 export Dispatcher;

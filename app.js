@@ -5,7 +5,7 @@ var realm = require('realm-js');
 
 realm.require('realm.router.Express', function(router) {
 
-   app.use(router("realm.test", {
+   app.use(router(["realm.test"], {
       prettyTrace: true
    }))
 }).catch(function(e) {
