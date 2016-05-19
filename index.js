@@ -5,35 +5,6 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
-   var desc = {};
-   Object['ke' + 'ys'](descriptor).forEach(function (key) {
-      desc[key] = descriptor[key];
-   });
-   desc.enumerable = !!desc.enumerable;
-   desc.configurable = !!desc.configurable;
-
-   if ('value' in desc || desc.initializer) {
-      desc.writable = true;
-   }
-
-   desc = decorators.slice().reverse().reduce(function (desc, decorator) {
-      return decorator(target, property, desc) || desc;
-   }, desc);
-
-   if (context && desc.initializer !== void 0) {
-      desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
-      desc.initializer = undefined;
-   }
-
-   if (desc.initializer === void 0) {
-      Object['define' + 'Property'](target, property, desc);
-      desc = null;
-   }
-
-   return desc;
-}
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 realm.module("realm.router.Collection", [], function () {
@@ -309,7 +280,7 @@ realm.module("realm.router.Dispatcher", ["realm.router.Collection", "realm.route
          key: "getCandidate",
          value: function getCandidate() {
             var routes = Collection.getMap();
-            var keys = [];
+
             var self = this;
             var _iteratorNormalCompletion = true;
             var _didIteratorError = false;
@@ -322,6 +293,7 @@ realm.module("realm.router.Dispatcher", ["realm.router.Collection", "realm.route
                   var path = _step$value[0];
                   var handler = _step$value[1];
 
+                  var keys = [];
                   var re = path2exp(path, keys);
                   var params = re.exec(self.req.path);
                   if (params) {
@@ -562,24 +534,29 @@ realm.module("realm.router.utils.logger", function () {
 });
 
 realm.module("realm.test.MainRouter", ["realm.router.decorators.route", "realm.router.decorators.cors", "realm.test.Session"], function (route, cors, sess) {
-   var _dec, _dec2, _dec3, _class, _desc, _value, _class2;
+   var _dec, _class;
 
    var $_exports;
 
-   var MainRouter = (_dec = route("/:id?/:sub?"), _dec2 = cors(), _dec3 = sess("hello world"), _dec(_class = _dec2(_class = (_class2 = function () {
+   var MainRouter = (_dec = route("/api/panel/intel-translation-save/:id/:lang?"), _dec(_class = function () {
       function MainRouter() {
          _classCallCheck(this, MainRouter);
       }
 
       _createClass(MainRouter, null, [{
          key: "get",
-         value: function get($session, $params, $query, $body) {
-            return $session;
+         value: function get($params, $query, $body) {
+            return $params;
+         }
+      }, {
+         key: "put",
+         value: function put($params, $query, $body) {
+            return $params;
          }
       }]);
 
       return MainRouter;
-   }(), (_applyDecoratedDescriptor(_class2, "get", [_dec3], Object.getOwnPropertyDescriptor(_class2, "get"), _class2)), _class2)) || _class) || _class);
+   }()) || _class);
 
 
    return $_exports;
@@ -609,14 +586,14 @@ realm.module("realm.test.Permissions", ["realm.router.Decorator"], function (Dec
    return $_exports;
 });
 realm.module("realm.test.Session", ["realm.router.Decorator", "realm.test.Permissions"], function (Decorator, permissions) {
-   var _dec4, _class3;
+   var _dec2, _class2;
 
    var $_exports;
 
    /**
     * Session
     */
-   var Session = (_dec4 = permissions(), _dec4(_class3 = function () {
+   var Session = (_dec2 = permissions(), _dec2(_class2 = function () {
       function Session() {
          _classCallCheck(this, Session);
       }
@@ -631,7 +608,7 @@ realm.module("realm.test.Session", ["realm.router.Decorator", "realm.test.Permis
       }]);
 
       return Session;
-   }()) || _class3);
+   }()) || _class2);
 
 
    $_exports = Decorator.wrap(Session);

@@ -4,12 +4,14 @@ import route, cors from realm.router.decorators;
 
 import Session as sess from realm.test;
 
-@route("/:id?/:sub?")
-@cors()
+@route("/api/panel/intel-translation-save/:id/:lang?")
 
 class MainRouter {
-   @sess("hello world")
-   static get($session, $params, $query, $body) {
-      return $session;
+
+   static get($params, $query, $body) {
+      return $params;
+   }
+   static put($params, $query, $body) {
+      return $params;
    }
 }

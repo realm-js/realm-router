@@ -173,9 +173,10 @@ class Dispatcher {
     */
    getCandidate() {
       let routes = Collection.getMap();
-      let keys = [];
+
       let self = this;
       for (let [path, handler] of routes) {
+         let keys = [];
          var re = path2exp(path, keys);
          var params = re.exec(self.req.path);
          if (params) {
