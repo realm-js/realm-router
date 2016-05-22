@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>test</title>
+      <script type="text/javascript" src="/lib/lodash/dist/lodash.min.js"></script>
+      <script type="text/javascript" src="/lib/realm-js/build/realm.js"></script>
+      <script type="text/javascript" src="/build/universal.js"></script>
+      <script type="text/javascript" src="/build/frontend.js"></script>
+   </head>
+   <body>
+
+      <script>
+      realm.require('realm.router.test.MyFirstBridge', function(MyFirstBridge){
+
+
+         MyFirstBridge.getSomething("sukka").then(function(something){
+            console.log(something);
+         });
+      });
+      </script>
+
+   </body>
+</html>

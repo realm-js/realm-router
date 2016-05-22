@@ -1,11 +1,20 @@
 var express = require('express');
 var app = express();
-var router = require("./index.js");
+var router = require("./build/backend.js");
 var realm = require('realm-js');
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+   extended: true
+}));
+
+app.use('/lib/lodash', express.static(__dirname + '/bower_components/lodash'));
+app.use('/lib/realm-js', express.static(__dirname + '/node_modules/realm-js'));
+app.use('/build', express.static(__dirname + '/build'));
 
 realm.require('realm.router.Express', function(router) {
 
-   app.use(router(["realm.test"], {
+   app.use(router(["realm.router.test", "realm.router.bridge"], {
       prettyTrace: true
    }))
 }).catch(function(e) {

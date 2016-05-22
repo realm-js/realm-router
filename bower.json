@@ -1,0 +1,21 @@
+{
+  "name": "realm-router",
+  "description": "Realm router is a bleeding edge restful framework (ec7 + decorators), based on realm dependency injection.",
+  "main": "build/backend.js",
+  "authors": [
+    "Ivan.Orlov <ivan@morrr.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/realm-js/realm-router",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "lodash": "^4.12.0"
+  }
+}
