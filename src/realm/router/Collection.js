@@ -1,10 +1,10 @@
 "use realm backend";
 
-const routeMap = new Map();
+const routeMap = {};
 
 class Collection {
    static register(path, target) {
-      routeMap.set(path, target);
+      routeMap[path] = target;
    }
 
    static getMap() {

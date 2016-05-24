@@ -100,7 +100,10 @@ class Dispatcher extends Decoration {
       let routes = Collection.getMap();
 
       let self = this;
-      for (let [path, handler] of routes) {
+
+      for (var path in routes) {
+
+         var handler = routes[path];
          let keys = [];
          var re = path2exp(path, keys);
          var params = re.exec(self.req.path);
