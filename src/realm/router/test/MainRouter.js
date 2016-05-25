@@ -4,12 +4,14 @@ import route, cors from realm.router.decorators;
 
 import Session as sess from realm.router.test;
 
-@route("/test/:id/:lang?")
+@route(/^\/(?!api|_realm_).*/)
 
 class MainRouter {
 
    static get($params, $query, $body) {
-      return $params;
+      return {
+         hello: 1
+      };
    }
    static put($params, $query, $body) {
       return $params;

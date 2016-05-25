@@ -101,11 +101,11 @@ class Dispatcher extends Decoration {
 
       let self = this;
 
-      for (var path in routes) {
-
-         var handler = routes[path];
+      for (var item in routes) {
+         var info = routes[item];
+         var handler = info.target;
          let keys = [];
-         var re = path2exp(path, keys);
+         var re = path2exp(info.path, keys);
          var params = re.exec(self.req.path);
          if (params) {
             return {

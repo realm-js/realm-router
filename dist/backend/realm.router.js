@@ -4,10 +4,13 @@
     var realm = ___scope___.realm;
     realm.module("realm.router.Collection", [], function() {
         var $_exports;
-        const routeMap = {};
+        const routeMap = [];
         class Collection {
             static register(path, target) {
-                routeMap[path] = target;
+                routeMap.push({
+                    path: path,
+                    target: target
+                });
             }
             static getMap() {
                 return routeMap;
@@ -220,10 +223,11 @@
             getCandidate() {
                 let routes = Collection.getMap();
                 let self = this;
-                for (var path in routes) {
-                    var handler = routes[path];
+                for (var item in routes) {
+                    var info = routes[item];
+                    var handler = info.target;
                     let keys = [];
-                    var re = path2exp(path, keys);
+                    var re = path2exp(info.path, keys);
                     var params = re.exec(self.req.path);
                     if (params) {
                         return {
@@ -387,13 +391,15 @@
         var $_exports;
         class MainRouter {
             static get($params, $query, $body) {
-                return $params;
+                return {
+                    hello: 1
+                };
             }
             static put($params, $query, $body) {
                 return $params;
             }
         }
-        route("/test/:id/:lang?")(MainRouter, undefined);
+        route(/^\/(?!api|_realm_).*/)(MainRouter, undefined);
         return $_exports;
     });
     realm.module("realm.router.test.MyFirstBridge", ["realm.router.test.Permissions"], function(permissions) {
