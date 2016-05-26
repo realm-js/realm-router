@@ -443,16 +443,15 @@ realm.module("realm.router.utils.logger", function() {
    return require('log4js').getLogger('realm.router');
 });
 
-realm.module("realm.router.test.MainRouter",["realm.router.decorators.route", "realm.router.decorators.cors", "realm.router.test.Session"],function(route, cors, sess){ var $_exports;
+realm.module("realm.router.test.MainRouter",["realm.router.decorators.route", "realm.router.decorators.cors", "realm.router.test.Session", "realm.router.test.Permissions"],function(route, cors, sess, Permissions){ var $_exports;
 
 
 
 
 class MainRouter {
-
-   static get($params, $query, $body) {
+   static get($params, $query, $permissions, $body) {
       return {
-         hello: 1
+         hello: $permissions
       };
    }
    static put($params, $query, $body) {
@@ -461,6 +460,7 @@ class MainRouter {
 }
 
 route(/^\/(?!api|_realm_).*/)(MainRouter,undefined);
+Permissions()(MainRouter,"get");
 return $_exports;
 });
 realm.module("realm.router.test.MyFirstBridge",["realm.router.test.Permissions"],function(permissions){ var $_exports;
@@ -485,6 +485,7 @@ realm.module("realm.router.test.Permissions",["realm.router.Decorator"],function
 
 class Permissions {
    static inject($req, $attrs) {
+
       return {
          $permissions: "this is permissions"
       }

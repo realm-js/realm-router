@@ -2,15 +2,15 @@
 
 import route, cors from realm.router.decorators;
 
-import Session as sess from realm.router.test;
+import Session as sess, Permissions from realm.router.test;
 
 @route(/^\/(?!api|_realm_).*/)
 
 class MainRouter {
-
-   static get($params, $query, $body) {
+   @Permissions()
+   static get($params, $query, $permissions, $body) {
       return {
-         hello: 1
+         hello: $permissions
       };
    }
    static put($params, $query, $body) {
