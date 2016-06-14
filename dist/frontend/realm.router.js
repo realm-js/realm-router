@@ -55,7 +55,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         } else {
                            if (response.indexOf('html') > -1) {
                               var div = document.createElement('div');
-                              div.style = 'overflow-y:scroll;position:fixed; top:0; left:0;width:100%;height:100%';
+                              div.style = 'overflow-y:scroll;position:fixed; top:0; z-index:9999; background-color:white; left:0;width:100%;height:100%';
                               div.innerHTML = response;
                               document.body.appendChild(div);
                            }
