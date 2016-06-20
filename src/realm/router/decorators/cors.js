@@ -5,7 +5,9 @@ import Decorator from realm.router;
 class Cors {
 
    static intercept($attrs, $req, $res) {
+
       var method = $req.method.toLowerCase();
+
       var setHeaders = function() {
          $res.header("Access-Control-Allow-Methods", 'POST, GET, OPTIONS, PUT, DELETE');
          $res.header("Access-Control-Allow-Origin", "*");

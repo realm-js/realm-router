@@ -1,6 +1,6 @@
 {
   "name": "realm-router",
-  "version": "1.1.25",
+  "version": "1.1.26",
   "description": "Realm router is a bleeding edge restful framework (ec7 + decorators), based on realm dependency injection.",
   "main": "index.js",
   "scripts": {

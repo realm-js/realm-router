@@ -116,7 +116,6 @@ realm.module("realm.router.Decorator",["realm.router.utils.lodash"],function(_){
  * the current decorator into instance properties (__decorators)
  */
 class Decorator {
-
    /**
     * static
     *
@@ -418,6 +417,18 @@ $_exports = Assert;
 
 return $_exports;
 });
+realm.module("realm.router.config",[],function(){ var $_exports;
+
+const config = {
+   bridge: {
+      cors: true
+   }
+}
+
+$_exports = config;
+
+return $_exports;
+});
 "use realm backend-raw";
 
 realm.module("realm.router.utils.path2exp", function() {
@@ -595,7 +606,9 @@ realm.module("realm.router.decorators.cors",["realm.router.Decorator"],function(
 class Cors {
 
    static intercept($attrs, $req, $res) {
+
       var method = $req.method.toLowerCase();
+
       var setHeaders = function() {
          $res.header("Access-Control-Allow-Methods", 'POST, GET, OPTIONS, PUT, DELETE');
          $res.header("Access-Control-Allow-Origin", "*");
@@ -678,7 +691,7 @@ $_exports = BridgeExec
 
 return $_exports;
 });
-realm.module("realm.router.bridge.BridgeRoute",["realm.router.decorators.route", "realm.router.Dispatcher", "realm.router.bridge.BridgeExec"],function(route, Dispatcher, BridgeExec){ var $_exports;
+realm.module("realm.router.bridge.BridgeRoute",["realm.router.decorators.route", "realm.router.decorators.cors", "realm.router.Dispatcher", "realm.router.config", "realm.router.Decorator", "realm.router.bridge.BridgeExec"],function(route, cors, Dispatcher, config, Decorator, BridgeExec){ var $_exports;
 
 
 class BridgeRoute {
@@ -695,6 +708,10 @@ class BridgeRoute {
       });
       return bridge.exec();
    }
+}
+
+if (config.bridge.cors === true) {
+   cors()(BridgeRoute, "post");
 }
 
 route("/_realm_/bridge/")(BridgeRoute,undefined);

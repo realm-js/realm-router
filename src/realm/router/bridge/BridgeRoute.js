@@ -1,7 +1,7 @@
 "use realm backend";
 
-import route from realm.router.decorators;
-import Dispatcher from realm.router;
+import route, cors from realm.router.decorators;
+import Dispatcher, config, Decorator from realm.router;
 import BridgeExec from realm.router.bridge;
 
 @route("/_realm_/bridge/")
@@ -19,4 +19,8 @@ class BridgeRoute {
       });
       return bridge.exec();
    }
+}
+
+if (config.bridge.cors === true) {
+   cors()(BridgeRoute, "post");
 }

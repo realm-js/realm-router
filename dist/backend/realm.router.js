@@ -2,6 +2,17 @@
     "use strict";
     var $isBackend = ___scope___.isNode;
     var realm = ___scope___.realm;
+})(function(self) {
+    var isNode = typeof exports !== 'undefined';
+    return {
+        isNode: isNode,
+        realm: isNode ? require('realm-js') : window.realm
+    }
+}());
+(function(___scope___) {
+    "use strict";
+    var $isBackend = ___scope___.isNode;
+    var realm = ___scope___.realm;
     realm.module("realm.router.Collection", [], function() {
         var $_exports;
         const routeMap = [];
@@ -189,7 +200,12 @@
                 opts = opts || {};
                 var self = this;
                 var method = opts.method || self.req.method.toLowerCase();
-                var target = item.target[method];
+                var target = item.target[method || "$$notImplemented"];
+                if (!item.$$notImplemented) {
+                    item.$$notImplemented = () => {
+                        return this.error(501, "Not implemented");
+                    }
+                }
                 self.services = {
                     $req: self.req,
                     $res: self.res,
@@ -199,9 +215,6 @@
                 _.each(localInjectors, function(fn, name) {
                     self.services[name] = fn(self);
                 });
-                if (!target) {
-                    return this.error(501, "Not implemented");
-                }
                 return self.decorate(item.target, method)
                     .then(function() {
                         if (self.intercepted !== undefined) {
@@ -445,6 +458,25 @@
         permissions()(Session, undefined);
         return $_exports;
     });
+    realm.module("realm.router.test.WithCors", ["realm.router.decorators.route", "realm.router.decorators.cors"], function(route, cors) {
+        var $_exports;
+        class Hello {
+            static get($params) {
+                return {
+                    ok: true
+                };
+            }
+            static put() {
+                return {
+                    ok: 1
+                }
+            }
+        }
+        $_exports = Hello;
+        cors()(Hello, undefined);
+        route("/api/devauth/:email")(Hello, undefined);
+        return $_exports;
+    });
     realm.module("realm.router.injectors.Body", [], function() {
         var $_exports;
         class Body {
@@ -486,13 +518,16 @@
         class Cors {
             static intercept($attrs, $req, $res) {
                 var method = $req.method.toLowerCase();
-                if (method === "options") {
+                var setHeaders = function() {
+                    $res.header("Access-Control-Allow-Methods", 'POST, GET, OPTIONS, PUT, DELETE');
                     $res.header("Access-Control-Allow-Origin", "*");
                     $res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Session");
+                }
+                if (method === "options") {
+                    setHeaders();
                     return {}
                 }
-                $res.header("Access-Control-Allow-Origin", "*");
-                $res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Session");
+                setHeaders();
             }
         }
         $_exports = Decorator.wrap(Cors)

@@ -8,7 +8,6 @@ import lodash as _ from realm.router.utils;
  * the current decorator into instance properties (__decorators)
  */
 class Decorator {
-
    /**
     * static
     *
