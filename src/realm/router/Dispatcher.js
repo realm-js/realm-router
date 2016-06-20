@@ -60,8 +60,12 @@ class Dispatcher extends Decoration {
 
       var self = this;
       var method = opts.method || self.req.method.toLowerCase();
-      var target = item.target[method];
-
+      var target = item.target[method || "$$notImplemented"];
+      if (!item.$$notImplemented) {
+         item.$$notImplemented = () => {
+            return this.error(501, "Not implemented");
+         }
+      }
       self.services = {
          $req: self.req,
          $res: self.res,
@@ -72,10 +76,6 @@ class Dispatcher extends Decoration {
       _.each(localInjectors, function(fn, name) {
          self.services[name] = fn(self);
       });
-
-      if (!target) {
-         return this.error(501, "Not implemented");
-      }
 
       return self.decorate(item.target, method)
          .then(function() {

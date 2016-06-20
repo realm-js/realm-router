@@ -210,8 +210,12 @@ class Dispatcher extends Decoration {
 
       var self = this;
       var method = opts.method || self.req.method.toLowerCase();
-      var target = item.target[method];
-
+      var target = item.target[method || "$$notImplemented"];
+      if (!item.$$notImplemented) {
+         item.$$notImplemented = () => {
+            return this.error(501, "Not implemented");
+         }
+      }
       self.services = {
          $req: self.req,
          $res: self.res,
@@ -222,10 +226,6 @@ class Dispatcher extends Decoration {
       _.each(localInjectors, function(fn, name) {
          self.services[name] = fn(self);
       });
-
-      if (!target) {
-         return this.error(501, "Not implemented");
-      }
 
       return self.decorate(item.target, method)
          .then(function() {
@@ -519,6 +519,29 @@ $_exports = Decorator.wrap(Session);
 permissions()(Session,undefined);
 return $_exports;
 });
+realm.module("realm.router.test.WithCors",["realm.router.decorators.route", "realm.router.decorators.cors"],function(route, cors){ var $_exports;
+
+
+class Hello {
+   static get($params) {
+      return {
+         ok: true
+      };
+   }
+
+   static put() {
+      return {
+         ok: 1
+      }
+   }
+}
+
+$_exports = Hello;
+
+cors()(Hello,undefined);
+route("/api/devauth/:email")(Hello,undefined);
+return $_exports;
+});
 realm.module("realm.router.injectors.Body",[],function(){ var $_exports;
 
 class Body {
@@ -573,14 +596,16 @@ class Cors {
 
    static intercept($attrs, $req, $res) {
       var method = $req.method.toLowerCase();
-
-      if (method === "options") {
+      var setHeaders = function() {
+         $res.header("Access-Control-Allow-Methods", 'POST, GET, OPTIONS, PUT, DELETE');
          $res.header("Access-Control-Allow-Origin", "*");
          $res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Session");
+      }
+      if (method === "options") {
+         setHeaders();
          return {}
       }
-      $res.header("Access-Control-Allow-Origin", "*");
-      $res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Session");
+      setHeaders();
    }
 }
 
