@@ -9,6 +9,7 @@ import Session as sess, Permissions from realm.router.test;
 class MainRouter {
    @Permissions()
    static get($params, $query, $permissions, $body) {
+      i++;
       return {
          hello: $permissions
       };

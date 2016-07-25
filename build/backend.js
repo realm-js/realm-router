@@ -357,29 +357,41 @@ $_exports = RequestInjectors;
 
 return $_exports;
 });
-realm.module("realm.router.Traceback",["realm.router.utils.lodash", "realm.router.utils.swig", "realm.router.utils.parsetrace", "realm.router.utils.logger"],function(_, swig, parsetrace, logger){ var $_exports;
+realm.module("realm.router.Traceback",["realm.router.utils.lodash", "realm.router.utils.swig", "realm.router.utils.parsetrace", "realm.router.utils.logger", "realm.router.utils.chalk"],function(_, swig, parsetrace, logger, chalk){ var $_exports;
 
 
 class Traceback {
    static handle(e, res, prettyTrace) {
-      logger.fatal(e.stack || e);
-      // If we have a direct error
+
+      if (e.stack) {
+         var error = parsetrace(e, {
+            sources: true
+         }).object();
+         if (error.frames[0]) {
+            logger.fatal("Realm server error");
+            var frame = error.frames[0];
+            var source = frame.source;
+            var markup = [];
+            _.each(source, function(item, number) {
+               markup.push("\t\t" + number + "\t" + item.code)
+            });
+            console.log("\t" + chalk.bgRed.bold.white(error.error));
+            console.log("\t" + chalk.green(frame.function) + "\t" + frame.file + ":" + frame.line + ":" + frame.column)
+            console.log(chalk.yellow(markup.join('\n')));
+            for (var i = 1; i < error.frames.length; i++) {
+               var fr = error.frames[i];
+               console.log("\t" + chalk.green(fr.function) + "\t" + fr.file + ":" + fr.line + ":" + fr.column)
+            }
+         }
+
+      } else {
+         logger.fatal(e.stack || e);
+      }
 
       if (e.status) {
          return res.status(e.status).send(e);
       }
 
-      if (prettyTrace) {
-         if (e.stack) {
-            var error = parsetrace(e, {
-               sources: true
-            }).object();
-
-            return res.status(500).send(swig.renderFile(__dirname + '/traceback.html', {
-               error: error
-            }));
-         }
-      }
       return res.status(500).send({
          status: 500,
          message: "Server Error"
@@ -450,6 +462,10 @@ realm.module("realm.router.utils.jsep", function() {
    return require('jsep');
 });
 
+realm.module("realm.router.utils.chalk", function() {
+   return require('chalk');
+});
+
 realm.module("realm.router.utils.logger", function() {
    return require('log4js').getLogger('realm.router');
 });
@@ -461,6 +477,7 @@ realm.module("realm.router.test.MainRouter",["realm.router.decorators.route", "r
 
 class MainRouter {
    static get($params, $query, $permissions, $body) {
+      i++;
       return {
          hello: $permissions
       };

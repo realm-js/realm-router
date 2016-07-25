@@ -19,6 +19,10 @@ realm.module("realm.router.utils.jsep", function() {
    return require('jsep');
 });
 
+realm.module("realm.router.utils.chalk", function() {
+   return require('chalk');
+});
+
 realm.module("realm.router.utils.logger", function() {
    return require('log4js').getLogger('realm.router');
 });

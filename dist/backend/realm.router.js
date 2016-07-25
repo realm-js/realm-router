@@ -378,6 +378,16 @@
         $_exports = Assert;
         return $_exports;
     });
+    realm.module("realm.router.config", [], function() {
+        var $_exports;
+        const config = {
+            bridge: {
+                cors: true
+            }
+        }
+        $_exports = config;
+        return $_exports;
+    });
     "use realm backend-raw";
     realm.module("realm.router.utils.path2exp", function() {
         return require('path-to-regexp');
@@ -590,7 +600,7 @@
         $_exports = BridgeExec
         return $_exports;
     });
-    realm.module("realm.router.bridge.BridgeRoute", ["realm.router.decorators.route", "realm.router.Dispatcher", "realm.router.bridge.BridgeExec"], function(route, Dispatcher, BridgeExec) {
+    realm.module("realm.router.bridge.BridgeRoute", ["realm.router.decorators.route", "realm.router.decorators.cors", "realm.router.Dispatcher", "realm.router.config", "realm.router.Decorator", "realm.router.bridge.BridgeExec"], function(route, cors, Dispatcher, config, Decorator, BridgeExec) {
         var $_exports;
         class BridgeRoute {
             static post($body, $req, $res, $params) {
@@ -604,6 +614,9 @@
                 });
                 return bridge.exec();
             }
+        }
+        if (config.bridge.cors === true) {
+            cors()(BridgeRoute, "post");
         }
         route("/_realm_/bridge/")(BridgeRoute, undefined);
         return $_exports;
