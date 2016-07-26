@@ -1,6 +1,6 @@
 {
   "name": "realm-router",
-  "version": "1.1.27",
+  "version": "1.1.28",
   "description": "Realm router is a bleeding edge restful framework (ec7 + decorators), based on realm dependency injection.",
   "main": "index.js",
   "scripts": {
@@ -43,7 +43,7 @@
     "parsetrace": "^0.2.0",
     "path-to-regexp": "^1.3.0",
     "promise": "^7.1.1",
-    "realm-js": "^1.1.82",
+    "realm-js": "^1.1.94",
     "swig": "^1.4.2"
   }
 }
