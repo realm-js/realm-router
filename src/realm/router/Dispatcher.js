@@ -98,6 +98,7 @@ class Dispatcher extends Decoration {
          }).then(function(response) {
             return response !== undefined ? self.res.send(response) : undefined;
          }).catch(function(e) {
+
             return Traceback.handle(e, self.res, PRETTY_TRACE);
          });
    }

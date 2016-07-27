@@ -223,9 +223,17 @@
                         return realm.require(item.target[method], self.services)
                             .then(function(response) {
                                 if (!response !== undefined) {
-                                    return self.res.send(response);
+                                    if (response.prototype) { // Dealing with chains
+                                        var props = Object.getOwnPropertyNames(response.prototype);
+                                        if (_.indexOf(props, 'constructor') === 0) {
+                                            return realm.chain(response);
+                                        }
+                                    }
+                                    return response;
                                 }
                             })
+                    }).then(function(response) {
+                        return response !== undefined ? self.res.send(response) : undefined;
                     }).catch(function(e) {
                         return Traceback.handle(e, self.res, PRETTY_TRACE);
                     });
@@ -428,10 +436,11 @@
         var $_exports;
         class MainRouter {
             static get($params, $query, $permissions, $body) {
-                i++;
-                return {
-                    hello: $permissions
-                };
+                return class {
+                    setPukka() {
+                        return 1;
+                    }
+                }
             }
             static put($params, $query, $body) {
                 return $params;
