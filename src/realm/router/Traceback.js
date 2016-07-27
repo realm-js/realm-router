@@ -2,8 +2,9 @@
 
 import lodash as _, swig, parsetrace, logger from realm.router.utils;
 import chalk from realm.router.utils;
-import fs from realm.utils;
+import fs, appRoot, path from realm.utils;
 
+// Find related module name
 let findRelatedModule = (frame) => {
    var lines = fs.readFileSync(frame.file).toString().split('\n');
    for (var i = frame.line; i > 0; i--) {
@@ -13,6 +14,7 @@ let findRelatedModule = (frame) => {
       }
    }
 }
+
 class Traceback {
    static handle(e, res, prettyTrace) {
 

@@ -14,7 +14,7 @@
     var $isBackend = ___scope___.isNode;
     var realm = ___scope___.realm;
     realm.module("realm.router.Collection", [], function() {
-        var $_exports;
+        var $_exports; /* @#realm-source:src/realm/router/Collection.js#*/
         const routeMap = [];
         class Collection {
             static register(path, target) {
@@ -31,7 +31,7 @@
         return $_exports;
     });
     realm.module("realm.router.Decoration", ["realm.router.utils.lodash"], function(_) {
-        var $_exports;
+        var $_exports; /* @#realm-source:src/realm/router/Decoration.js#*/
         class Decorator {
             promised() {
                 return new Promise((resolve, reject) => {
@@ -111,7 +111,7 @@
         return $_exports;
     });
     realm.module("realm.router.Decorator", ["realm.router.utils.lodash"], function(_) {
-        var $_exports;
+        var $_exports; /* @#realm-source:src/realm/router/Decorator.js#*/
         /**
          * Decorator
          * Wraps a class into a function that stores information about
@@ -148,7 +148,7 @@
         return $_exports;
     });
     realm.module("realm.router.Dispatcher", ["realm.router.Collection", "realm.router.Decoration", "realm.router.Traceback", "realm.router.RequestInjectors", "realm.router.utils.path2exp", "realm.router.utils.Promise", "realm.router.utils.logger", "realm.router.utils.lodash"], function(Collection, Decoration, Traceback, RequestInjectors, path2exp, Promise, logger, _) {
-        var $_exports;
+        var $_exports; /* @#realm-source:src/realm/router/Dispatcher.js#*/
         let PRETTY_TRACE = false;
         /**
          * Router
@@ -299,7 +299,7 @@
         return $_exports;
     });
     realm.module("realm.router.Express", ["realm.router.Dispatcher", "realm.router.RequestInjectors", "realm.router.utils.logger", "realm.router.utils.lodash"], function(Dispatcher, RequestInjectors, logger, _) {
-        var $_exports;
+        var $_exports; /* @#realm-source:src/realm/router/Express.js#*/
         var Express = (_package, opt) => {
             Dispatcher.initRoutes(_package, opt);
             RequestInjectors.init("realm.router.injectors");
@@ -313,7 +313,7 @@
         return $_exports;
     });
     realm.module("realm.router.RequestInjectors", ["realm.router.utils.lodash"], function(_) {
-        var $_exports;
+        var $_exports; /* @#realm-source:src/realm/router/RequestInjectors.js#*/
         let INJECTORS = {};
         /**
          * RequestInjectors
@@ -336,8 +336,18 @@
         $_exports = RequestInjectors;
         return $_exports;
     });
-    realm.module("realm.router.Traceback", ["realm.router.utils.lodash", "realm.router.utils.swig", "realm.router.utils.parsetrace", "realm.router.utils.logger", "realm.router.utils.chalk"], function(_, swig, parsetrace, logger, chalk) {
-        var $_exports;
+    realm.module("realm.router.Traceback", ["realm.router.utils.lodash", "realm.router.utils.swig", "realm.router.utils.parsetrace", "realm.router.utils.logger", "realm.router.utils.chalk", "realm.utils.fs", "realm.utils.appRoot", "realm.utils.path"], function(_, swig, parsetrace, logger, chalk, fs, appRoot, path) {
+        var $_exports; /* @#realm-source:src/realm/router/Traceback.js#*/
+        // Find related module name
+        let findRelatedModule = (frame) => {
+            var lines = fs.readFileSync(frame.file).toString().split('\n');
+            for (var i = frame.line; i > 0; i--) {
+                var mod = lines[i].match(/realm\.module\("([^"']+)/)
+                if (mod) {
+                    return mod[1];
+                }
+            }
+        }
         class Traceback {
             static handle(e, res, prettyTrace) {
                 if (e.stack) {
@@ -347,14 +357,18 @@
                     if (error.frames[0]) {
                         logger.fatal("Realm server error");
                         var frame = error.frames[0];
+                        var moduleName = findRelatedModule(frame);
                         var source = frame.source;
                         var markup = [];
                         _.each(source, function(item, number) {
                             markup.push("\t\t" + number + "\t" + item.code)
                         });
                         console.log("\t" + chalk.bgRed.bold.white(error.error));
-                        console.log("\t" + chalk.green(frame.function) + "\t" + frame.file + ":" + frame.line + ":" + frame.column)
+                        if (moduleName) {
+                            console.log("\t" + chalk.yellow.bold(">> " + moduleName));
+                        }
                         console.log(chalk.yellow(markup.join('\n')));
+                        console.log("\t" + chalk.green(frame.function) + "\t" + frame.file + ":" + frame.line + ":" + frame.column)
                         for (var i = 1; i < error.frames.length; i++) {
                             var fr = error.frames[i];
                             console.log("\t" + chalk.green(fr.function) + "\t" + fr.file + ":" + fr.line + ":" + fr.column)
@@ -376,7 +390,7 @@
         return $_exports;
     });
     realm.module("realm.router.assert", [], function() {
-        var $_exports;
+        var $_exports; /* @#realm-source:src/realm/router/assert.js#*/
         const _throw = function(code, msg) {
             throw {
                 status: code,
@@ -398,7 +412,7 @@
         return $_exports;
     });
     realm.module("realm.router.config", [], function() {
-        var $_exports;
+        var $_exports; /* @#realm-source:src/realm/router/config.js#*/
         const config = {
             bridge: {
                 cors: true
@@ -433,12 +447,16 @@
         return require('log4js').getLogger('realm.router');
     });
     realm.module("realm.router.test.MainRouter", ["realm.router.decorators.route", "realm.router.decorators.cors", "realm.router.test.Session", "realm.router.test.Permissions"], function(route, cors, sess, Permissions) {
-        var $_exports;
+        var $_exports; /* @#realm-source:src/realm/router/test/MainRouter.js#*/
         class MainRouter {
-            static get($params, $query, $permissions, $body) {
+            static get($params, $res, $query, $permissions, $body) {
                 return class {
                     setPukka() {
                         return 1;
+                    }
+                    otherStuff() {
+                        //return this.$kill()
+                        //return $res.send("hello")
                     }
                 }
             }
@@ -446,12 +464,12 @@
                 return $params;
             }
         }
-        route(/^\/(?!api|_realm_).*/)(MainRouter, undefined);
+        route(/^\/(?!api|_realm_|favicon.ico).*/)(MainRouter, undefined);
         Permissions()(MainRouter, "get");
         return $_exports;
     });
     realm.module("realm.router.test.MyFirstBridge", ["realm.router.test.Permissions"], function(permissions) {
-        var $_exports;
+        var $_exports; /* @#realm-source:src/realm/router/test/MyFirstBridge.js#*/
         class MyFirstBridge {
             static getSomething(id) {
                 return {
@@ -465,7 +483,7 @@
         return $_exports;
     });
     realm.module("realm.router.test.Permissions", ["realm.router.Decorator"], function(Decorator) {
-        var $_exports;
+        var $_exports; /* @#realm-source:src/realm/router/test/Permissions.js#*/
         class Permissions {
             static inject($req, $attrs) {
                 return {
@@ -477,7 +495,7 @@
         return $_exports;
     });
     realm.module("realm.router.test.Session", ["realm.router.Decorator", "realm.router.test.Permissions"], function(Decorator, permissions) {
-        var $_exports;
+        var $_exports; /* @#realm-source:src/realm/router/test/Session.js#*/
         /**
          * Session
          */
@@ -493,7 +511,7 @@
         return $_exports;
     });
     realm.module("realm.router.test.WithCors", ["realm.router.decorators.route", "realm.router.decorators.cors"], function(route, cors) {
-        var $_exports;
+        var $_exports; /* @#realm-source:src/realm/router/test/WithCors.js#*/
         class Hello {
             static get($params) {
                 return {
@@ -512,7 +530,7 @@
         return $_exports;
     });
     realm.module("realm.router.injectors.Body", [], function() {
-        var $_exports;
+        var $_exports; /* @#realm-source:src/realm/router/injectors/Body.js#*/
         class Body {
             static get injectionName() {
                 return "$body";
@@ -530,7 +548,7 @@
         return $_exports;
     });
     realm.module("realm.router.injectors.Query", [], function() {
-        var $_exports;
+        var $_exports; /* @#realm-source:src/realm/router/injectors/Query.js#*/
         class Query {
             static get injectionName() {
                 return "$query";
@@ -548,7 +566,7 @@
         return $_exports;
     });
     realm.module("realm.router.decorators.cors", ["realm.router.Decorator"], function(Decorator) {
-        var $_exports;
+        var $_exports; /* @#realm-source:src/realm/router/decorators/cors.js#*/
         class Cors {
             static intercept($attrs, $req, $res) {
                 var method = $req.method.toLowerCase();
@@ -568,7 +586,7 @@
         return $_exports;
     });
     realm.module("realm.router.decorators.route", ["realm.router.Collection"], function(Collection) {
-        var $_exports;
+        var $_exports; /* @#realm-source:src/realm/router/decorators/route.js#*/
         var Route = path => {
             return (target, property, descriptor) => {
                 Collection.register(path, target);
@@ -578,7 +596,7 @@
         return $_exports;
     });
     realm.module("realm.router.bridge.BridgeExec", ["realm.router.Decoration", "realm.router.Dispatcher", "realm.router.Traceback"], function(Decoration, Dispatcher, Traceback) {
-        var $_exports;
+        var $_exports; /* @#realm-source:src/realm/router/bridge/BridgeExec.js#*/
         class BridgeExec extends Decoration {
             constructor(name, method, opts) {
                 super();
@@ -625,7 +643,7 @@
         return $_exports;
     });
     realm.module("realm.router.bridge.BridgeRoute", ["realm.router.decorators.route", "realm.router.decorators.cors", "realm.router.Dispatcher", "realm.router.config", "realm.router.Decorator", "realm.router.bridge.BridgeExec"], function(route, cors, Dispatcher, config, Decorator, BridgeExec) {
-        var $_exports;
+        var $_exports; /* @#realm-source:src/realm/router/bridge/BridgeRoute.js#*/
         class BridgeRoute {
             static post($body, $req, $res, $params) {
                 var moduleName = $body.get("bridge");

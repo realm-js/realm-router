@@ -1,6 +1,6 @@
 (function(___scope___) { "use strict"; var $isBackend = ___scope___.isNode; var realm  = ___scope___.realm;
 
-realm.module("realm.router.Collection",[],function(){ var $_exports;
+realm.module("realm.router.Collection",[],function(){ var $_exports;/* @#realm-source:src/realm/router/Collection.js#*/
 
 const routeMap = [];
 
@@ -21,7 +21,7 @@ $_exports = Collection;
 
 return $_exports;
 });
-realm.module("realm.router.Decoration",["realm.router.utils.lodash"],function(_){ var $_exports;
+realm.module("realm.router.Decoration",["realm.router.utils.lodash"],function(_){ var $_exports;/* @#realm-source:src/realm/router/Decoration.js#*/
 
 class Decorator {
    promised() {
@@ -107,7 +107,7 @@ $_exports = Decorator;
 
 return $_exports;
 });
-realm.module("realm.router.Decorator",["realm.router.utils.lodash"],function(_){ var $_exports;
+realm.module("realm.router.Decorator",["realm.router.utils.lodash"],function(_){ var $_exports;/* @#realm-source:src/realm/router/Decorator.js#*/
 
 
 /**
@@ -149,7 +149,7 @@ $_exports = Decorator;
 
 return $_exports;
 });
-realm.module("realm.router.Dispatcher",["realm.router.Collection", "realm.router.Decoration", "realm.router.Traceback", "realm.router.RequestInjectors", "realm.router.utils.path2exp", "realm.router.utils.Promise", "realm.router.utils.logger", "realm.router.utils.lodash"],function(Collection, Decoration, Traceback, RequestInjectors, path2exp, Promise, logger, _){ var $_exports;
+realm.module("realm.router.Dispatcher",["realm.router.Collection", "realm.router.Decoration", "realm.router.Traceback", "realm.router.RequestInjectors", "realm.router.utils.path2exp", "realm.router.utils.Promise", "realm.router.utils.logger", "realm.router.utils.lodash"],function(Collection, Decoration, Traceback, RequestInjectors, path2exp, Promise, logger, _){ var $_exports;/* @#realm-source:src/realm/router/Dispatcher.js#*/
 
 
 
@@ -319,7 +319,7 @@ $_exports = Dispatcher;
 
 return $_exports;
 });
-realm.module("realm.router.Express",["realm.router.Dispatcher", "realm.router.RequestInjectors", "realm.router.utils.logger", "realm.router.utils.lodash"],function(Dispatcher, RequestInjectors, logger, _){ var $_exports;
+realm.module("realm.router.Express",["realm.router.Dispatcher", "realm.router.RequestInjectors", "realm.router.utils.logger", "realm.router.utils.lodash"],function(Dispatcher, RequestInjectors, logger, _){ var $_exports;/* @#realm-source:src/realm/router/Express.js#*/
 
 
 var Express = (_package, opt) => {
@@ -338,7 +338,7 @@ $_exports = Express;
 
 return $_exports;
 });
-realm.module("realm.router.RequestInjectors",["realm.router.utils.lodash"],function(_){ var $_exports;
+realm.module("realm.router.RequestInjectors",["realm.router.utils.lodash"],function(_){ var $_exports;/* @#realm-source:src/realm/router/RequestInjectors.js#*/
 
 
 let INJECTORS = {};
@@ -367,9 +367,10 @@ $_exports = RequestInjectors;
 
 return $_exports;
 });
-realm.module("realm.router.Traceback",["realm.router.utils.lodash", "realm.router.utils.swig", "realm.router.utils.parsetrace", "realm.router.utils.logger", "realm.router.utils.chalk", "realm.utils.fs"],function(_, swig, parsetrace, logger, chalk, fs){ var $_exports;
+realm.module("realm.router.Traceback",["realm.router.utils.lodash", "realm.router.utils.swig", "realm.router.utils.parsetrace", "realm.router.utils.logger", "realm.router.utils.chalk", "realm.utils.fs", "realm.utils.appRoot", "realm.utils.path"],function(_, swig, parsetrace, logger, chalk, fs, appRoot, path){ var $_exports;/* @#realm-source:src/realm/router/Traceback.js#*/
 
 
+// Find related module name
 let findRelatedModule = (frame) => {
    var lines = fs.readFileSync(frame.file).toString().split('\n');
    for (var i = frame.line; i > 0; i--) {
@@ -379,9 +380,10 @@ let findRelatedModule = (frame) => {
       }
    }
 }
+
 class Traceback {
    static handle(e, res, prettyTrace) {
-      
+
       if (e.stack) {
          var error = parsetrace(e, {
             sources: true
@@ -429,7 +431,7 @@ $_exports = Traceback;
 
 return $_exports;
 });
-realm.module("realm.router.assert",[],function(){ var $_exports;
+realm.module("realm.router.assert",[],function(){ var $_exports;/* @#realm-source:src/realm/router/assert.js#*/
 
 const _throw = function(code, msg) {
    throw {
@@ -454,7 +456,7 @@ $_exports = Assert;
 
 return $_exports;
 });
-realm.module("realm.router.config",[],function(){ var $_exports;
+realm.module("realm.router.config",[],function(){ var $_exports;/* @#realm-source:src/realm/router/config.js#*/
 
 const config = {
    bridge: {
@@ -495,17 +497,23 @@ realm.module("realm.router.utils.logger", function() {
    return require('log4js').getLogger('realm.router');
 });
 
-realm.module("realm.router.test.MainRouter",["realm.router.decorators.route", "realm.router.decorators.cors", "realm.router.test.Session", "realm.router.test.Permissions"],function(route, cors, sess, Permissions){ var $_exports;
+realm.module("realm.router.test.MainRouter",["realm.router.decorators.route", "realm.router.decorators.cors", "realm.router.test.Session", "realm.router.test.Permissions"],function(route, cors, sess, Permissions){ var $_exports;/* @#realm-source:src/realm/router/test/MainRouter.js#*/
 
 
 
 
 class MainRouter {
-   static get($params, $query, $permissions, $body) {
-      i++;
+   static get($params, $res, $query, $permissions, $body) {
+
       return class {
          setPukka() {
             return 1;
+         }
+
+         otherStuff() {
+            //return this.$kill()
+            //return $res.send("hello")
+
          }
       }
    }
@@ -518,7 +526,7 @@ route(/^\/(?!api|_realm_|favicon.ico).*/)(MainRouter,undefined);
 Permissions()(MainRouter,"get");
 return $_exports;
 });
-realm.module("realm.router.test.MyFirstBridge",["realm.router.test.Permissions"],function(permissions){ var $_exports;
+realm.module("realm.router.test.MyFirstBridge",["realm.router.test.Permissions"],function(permissions){ var $_exports;/* @#realm-source:src/realm/router/test/MyFirstBridge.js#*/
 
 class MyFirstBridge {
    static getSomething(id) {
@@ -535,7 +543,7 @@ $_exports = MyFirstBridge;
 permissions()(MyFirstBridge,"getSomething");
 return $_exports;
 });
-realm.module("realm.router.test.Permissions",["realm.router.Decorator"],function(Decorator){ var $_exports;
+realm.module("realm.router.test.Permissions",["realm.router.Decorator"],function(Decorator){ var $_exports;/* @#realm-source:src/realm/router/test/Permissions.js#*/
 
 
 class Permissions {
@@ -552,7 +560,7 @@ $_exports = Decorator.wrap(Permissions);
 
 return $_exports;
 });
-realm.module("realm.router.test.Session",["realm.router.Decorator", "realm.router.test.Permissions"],function(Decorator, permissions){ var $_exports;
+realm.module("realm.router.test.Session",["realm.router.Decorator", "realm.router.test.Permissions"],function(Decorator, permissions){ var $_exports;/* @#realm-source:src/realm/router/test/Session.js#*/
 
 
 
@@ -574,7 +582,7 @@ $_exports = Decorator.wrap(Session);
 permissions()(Session,undefined);
 return $_exports;
 });
-realm.module("realm.router.test.WithCors",["realm.router.decorators.route", "realm.router.decorators.cors"],function(route, cors){ var $_exports;
+realm.module("realm.router.test.WithCors",["realm.router.decorators.route", "realm.router.decorators.cors"],function(route, cors){ var $_exports;/* @#realm-source:src/realm/router/test/WithCors.js#*/
 
 
 class Hello {
@@ -597,7 +605,7 @@ cors()(Hello,undefined);
 route("/api/devauth/:email")(Hello,undefined);
 return $_exports;
 });
-realm.module("realm.router.injectors.Body",[],function(){ var $_exports;
+realm.module("realm.router.injectors.Body",[],function(){ var $_exports;/* @#realm-source:src/realm/router/injectors/Body.js#*/
 
 class Body {
 
@@ -621,7 +629,7 @@ $_exports = Body;
 
 return $_exports;
 });
-realm.module("realm.router.injectors.Query",[],function(){ var $_exports;
+realm.module("realm.router.injectors.Query",[],function(){ var $_exports;/* @#realm-source:src/realm/router/injectors/Query.js#*/
 
 class Query {
 
@@ -644,7 +652,7 @@ $_exports = Query;
 
 return $_exports;
 });
-realm.module("realm.router.decorators.cors",["realm.router.Decorator"],function(Decorator){ var $_exports;
+realm.module("realm.router.decorators.cors",["realm.router.Decorator"],function(Decorator){ var $_exports;/* @#realm-source:src/realm/router/decorators/cors.js#*/
 
 
 class Cors {
@@ -671,7 +679,7 @@ $_exports = Decorator.wrap(Cors)
 
 return $_exports;
 });
-realm.module("realm.router.decorators.route",["realm.router.Collection"],function(Collection){ var $_exports;
+realm.module("realm.router.decorators.route",["realm.router.Collection"],function(Collection){ var $_exports;/* @#realm-source:src/realm/router/decorators/route.js#*/
 
 
 var Route = path => {
@@ -684,7 +692,7 @@ $_exports = Route
 
 return $_exports;
 });
-realm.module("realm.router.bridge.BridgeExec",["realm.router.Decoration", "realm.router.Dispatcher", "realm.router.Traceback"],function(Decoration, Dispatcher, Traceback){ var $_exports;
+realm.module("realm.router.bridge.BridgeExec",["realm.router.Decoration", "realm.router.Dispatcher", "realm.router.Traceback"],function(Decoration, Dispatcher, Traceback){ var $_exports;/* @#realm-source:src/realm/router/bridge/BridgeExec.js#*/
 
 
 class BridgeExec extends Decoration {
@@ -735,7 +743,7 @@ $_exports = BridgeExec
 
 return $_exports;
 });
-realm.module("realm.router.bridge.BridgeRoute",["realm.router.decorators.route", "realm.router.decorators.cors", "realm.router.Dispatcher", "realm.router.config", "realm.router.Decorator", "realm.router.bridge.BridgeExec"],function(route, cors, Dispatcher, config, Decorator, BridgeExec){ var $_exports;
+realm.module("realm.router.bridge.BridgeRoute",["realm.router.decorators.route", "realm.router.decorators.cors", "realm.router.Dispatcher", "realm.router.config", "realm.router.Decorator", "realm.router.bridge.BridgeExec"],function(route, cors, Dispatcher, config, Decorator, BridgeExec){ var $_exports;/* @#realm-source:src/realm/router/bridge/BridgeRoute.js#*/
 
 
 class BridgeRoute {

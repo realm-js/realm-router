@@ -15,7 +15,7 @@ app.use('/build', express.static(__dirname + '/build'));
 realm.require('realm.router.Express', function(router) {
 
    app.use(router(["realm.router.test", "realm.router.bridge"], {
-      prettyTrace: true
+
    }))
 }).catch(function(e) {
    console.log(e.stack)

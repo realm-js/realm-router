@@ -8,11 +8,17 @@ import Session as sess, Permissions from realm.router.test;
 
 class MainRouter {
    @Permissions()
-   static get($params, $query, $permissions, $body) {
-      i++;
+   static get($params, $res, $query, $permissions, $body) {
+
       return class {
          setPukka() {
             return 1;
+         }
+
+         otherStuff() {
+            //return this.$kill()
+            //return $res.send("hello")
+
          }
       }
    }

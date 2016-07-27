@@ -15,7 +15,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
    var $isBackend = ___scope___.isNode;var realm = ___scope___.realm;
 
    realm.module("realm.router.BridgeRequest", [], function () {
-      var $_exports;
+      var $_exports; /* @#realm-source:src/realm/router/BridgeRequest.js#*/
 
       function argumentArray(_args) {
 
