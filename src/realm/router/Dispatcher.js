@@ -85,7 +85,7 @@ class Dispatcher extends Decoration {
             return realm.require(item.target[method], self.services)
                .then(function(response) {
 
-                  if (!response !== undefined) {
+                  if (response !== undefined) {
                      if (response.prototype) { // Dealing with chains
                         var props = Object.getOwnPropertyNames(response.prototype);
                         if (_.indexOf(props, 'constructor') === 0) {
